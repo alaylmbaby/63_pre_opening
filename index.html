@@ -97,13 +97,53 @@
 
   /* 63TODAY */
   .home-wrap { position: relative; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; background: #fff; -webkit-overflow-scrolling: touch; padding-bottom: 64px; }
-  .home-hero { position: relative; width: 100%; aspect-ratio: 402 / 563; max-height: 563px; background-image: var(--home-bg); background-size: cover; background-position: center top; background-repeat: no-repeat; background-color: #1a2740; }
-  .left-banner { position: absolute; left: 18px; top: 98px; width: 158px; height: 188px; background: #ffffff; border-radius: 16px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22); padding: 16px 14px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; transition: transform 0.15s ease; }
+  .home-hero { position: relative; width: 100%; aspect-ratio: 402 / 563; background-image: var(--home-bg); background-size: 100% 100%; background-position: center top; background-repeat: no-repeat; background-color: #1a2740; container-type: inline-size; }
+  /* 좌측 배너: home-hero 기준 % 위치/크기 + cqw 단위로 텍스트/패딩 비례 */
+  .left-banner {
+    position: absolute;
+    left: 4.48%; top: 17.4%;
+    width: 39.3%;
+    aspect-ratio: 158 / 188;
+    background: #ffffff;
+    border-radius: 4cqw;
+    box-shadow: 0 2cqw 6cqw rgba(0, 0, 0, 0.22);
+    padding: 4cqw 3.5cqw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
   .left-banner:active { transform: scale(0.98); }
-  .left-banner .tag { font-size: 10px; font-weight: 700; color: #ff6b3d; letter-spacing: 0.2px; margin-bottom: 6px; }
-  .left-banner .banner-title { font-size: 16px; font-weight: 800; line-height: 1.35; color: #1a1a1a; }
-  .left-banner .cta-pill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid #ececec; border-radius: 999px; font-size: 11px; font-weight: 700; color: #ff6b3d; align-self: flex-start; }
-  .left-banner .cta-pill .arrow { font-size: 12px; color: #1a1a1a; }
+  .left-banner .tag {
+    font-size: 2.5cqw;
+    font-weight: 700;
+    color: #ff6b3d;
+    letter-spacing: 0.05cqw;
+    margin-bottom: 1.5cqw;
+  }
+  .left-banner .banner-title {
+    font-size: 4cqw;
+    font-weight: 800;
+    line-height: 1.35;
+    color: #1a1a1a;
+  }
+  .left-banner .cta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.5cqw;
+    padding: 1.75cqw 3cqw;
+    border: 0.25cqw solid #ececec;
+    border-radius: 999px;
+    font-size: 2.75cqw;
+    font-weight: 700;
+    color: #ff6b3d;
+    align-self: flex-start;
+  }
+  .left-banner .cta-pill .arrow {
+    font-size: 3cqw;
+    color: #1a1a1a;
+  }
   .store-section { position: relative; width: 100%; background: #ffffff; padding: 18px 20px 8px; }
   .store-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
   .store-header h3 { font-size: 16px; font-weight: 800; color: #1a1a1a; border-bottom: 2px solid #1a1a1a; padding-bottom: 4px; }
@@ -199,7 +239,7 @@
     padding: 14px 20px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     border-bottom: 1px solid #f0f1f4;
   }
   .building-selector {
@@ -245,6 +285,119 @@
   }
   .building-action-btn:active { background: #f0f1f4; }
   .building-action-btn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* 층별 배치도 모달 */
+  .floormap-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 220;
+    display: none;
+    flex-direction: column;
+    justify-content: flex-end;
+    animation: fadeIn 0.2s ease;
+  }
+  .floormap-overlay.show { display: flex; }
+  .floormap-sheet {
+    background: #fff;
+    border-radius: 20px 20px 0 0;
+    max-height: 88%;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    overflow: hidden;
+  }
+  .floormap-handle {
+    width: 40px; height: 4px;
+    background: #d0d4dc;
+    border-radius: 2px;
+    margin: 10px auto 6px;
+    flex-shrink: 0;
+  }
+  .floormap-header {
+    padding: 12px 20px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #f0f1f4;
+    flex-shrink: 0;
+  }
+  .floormap-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1a1a1a;
+    letter-spacing: -0.3px;
+  }
+  .floormap-close-btn {
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: #888;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  .floormap-close-btn:active { background: #f0f1f4; }
+  .floormap-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .floormap-floor-section {
+    margin-bottom: 24px;
+  }
+  .floormap-floor-section:last-child { margin-bottom: 0; }
+  .floormap-floor-label {
+    display: inline-block;
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+  }
+  .floormap-zone-name {
+    font-size: 15px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+    letter-spacing: -0.2px;
+  }
+  .floormap-placeholder {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: repeating-linear-gradient(45deg, #f5f6f8 0, #f5f6f8 10px, #ebecf0 10px, #ebecf0 20px);
+    border: 1px dashed #c0c4cc;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #888;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-align: center;
+    padding: 20px;
+  }
+  .floormap-placeholder-icon {
+    font-size: 32px;
+    opacity: 0.5;
+    margin-bottom: 4px;
+  }
+  .floormap-placeholder-sub {
+    font-size: 11px;
+    color: #aaa;
+    font-weight: 500;
+    line-height: 1.5;
+  }
   .notif-dot {
     position: absolute;
     top: 8px; right: 9px;
@@ -280,16 +433,46 @@
     background: #fff;
     padding: 4px 0 14px;
     border-bottom: 1px solid #f0f1f4;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
   .floor-filter {
+    flex: 1;
+    min-width: 0;
     display: flex;
     gap: 6px;
-    padding: 0 20px;
+    padding: 0 8px 0 20px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
   .floor-filter::-webkit-scrollbar { display: none; }
+  .floor-map-btn {
+    flex-shrink: 0;
+    margin-right: 16px;
+    background: #f5f6f8;
+    border: 1px solid #e8e9eb;
+    border-radius: 999px;
+    padding: 7px 12px 7px 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    color: #1a1a1a;
+    font-size: 12px;
+    font-weight: 700;
+    transition: background 0.15s ease;
+  }
+  .floor-map-btn:active { background: #e8e9eb; }
+  .floor-map-btn svg {
+    width: 14px; height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
   .floor-filter-btn {
     flex-shrink: 0;
     background: #fff;
@@ -1447,6 +1630,16 @@
     color: rgba(255, 209, 102, 0.75);
     margin-left: 4px;
     font-weight: 700;
+  }
+  .result-chances-sub {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.12);
+    font-size: 12.5px;
+    color: rgba(255, 209, 102, 0.85);
+    font-weight: 600;
+    letter-spacing: -0.1px;
+    text-align: center;
   }
   .result-retry-btn {
     width: 100%;
@@ -2825,6 +3018,227 @@
   .lct-text { flex: 1; min-width: 0; }
   .lct-title { font-size: 13px; font-weight: 700; color: #1a1a1a; margin-bottom: 2px; }
   .lct-url { font-size: 11px; color: #888; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* 공유받은 사용자 화면 - 웹뷰 클론 */
+  .webview-clone-page { width: 100%; height: 100%; display: flex; flex-direction: column; background: #f5f6f8; position: relative; }
+  .wc-scroll-body { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; padding-bottom: 80px; }
+  .wc-hero-shared { background: linear-gradient(160deg, #1a2740 0%, #2a3f60 100%) !important; }
+
+  /* 창문 닦기 인터셉트 레이어 */
+  .wc-scratch-intercept {
+    position: relative;
+    width: 100%; aspect-ratio: 300 / 225;
+    background: linear-gradient(135deg, #c0c0c6 0%, #a8a8b0 100%);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .wc-scratch-intercept .scratch-back { position: absolute; inset: 0; border-radius: 12px; }
+  .wc-intercept-hint {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px;
+    background: rgba(26, 39, 64, 0.38);
+    z-index: 5;
+  }
+  .wc-intercept-hint span:first-child { font-size: 28px; }
+  .wc-intercept-hint span:last-child { font-size: 13px; font-weight: 700; color: #fff; letter-spacing: -0.2px; }
+  .wc-share-boost-intercept { cursor: pointer; }
+
+  /* 앱 다운로드 팝업 오버레이 */
+  .wc-app-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0, 0, 0, 0.52);
+    z-index: 300;
+    display: none;
+    flex-direction: column;
+    justify-content: flex-end;
+    animation: fadeIn 0.2s ease;
+  }
+  .wc-app-overlay.show { display: flex; }
+  .wc-app-sheet {
+    background: #fff;
+    border-radius: 22px 22px 0 0;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    animation: slideUp 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .wc-app-handle { width: 40px; height: 4px; background: #d0d4dc; border-radius: 2px; margin: 12px auto 0; }
+  .wc-app-body { padding: 20px 24px 8px; text-align: center; }
+  .wc-app-icon {
+    width: 68px; height: 68px;
+    border-radius: 18px;
+    background: radial-gradient(circle at 30% 25%, #ffd166 0%, #ff9c3a 70%, #d97e1a 100%);
+    color: #4a2400;
+    font-size: 26px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 14px;
+    box-shadow: 0 8px 22px rgba(255, 156, 58, 0.32);
+  }
+  .wc-app-title { font-size: 17px; font-weight: 800; color: #1a2740; margin-bottom: 8px; letter-spacing: -0.3px; }
+  .wc-app-desc { font-size: 13px; color: #666; line-height: 1.6; margin-bottom: 22px; }
+  .wc-app-btns { display: flex; flex-direction: column; gap: 10px; }
+  .wc-store-btn {
+    width: 100%; padding: 13px 16px;
+    border-radius: 12px; border: none;
+    display: flex; align-items: center; gap: 14px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .wc-store-btn:active { transform: scale(0.98); }
+  .wc-ios { background: #000; color: #fff; }
+  .wc-android { background: linear-gradient(135deg, #00c853 0%, #00a846 100%); color: #fff; }
+  .wc-store-icon { font-size: 22px; flex-shrink: 0; width: 24px; text-align: center; }
+  .wc-store-text { display: flex; flex-direction: column; align-items: flex-start; }
+  .wc-store-sub { font-size: 10px; opacity: 0.8; font-weight: 500; }
+  .wc-store-name { font-size: 15px; font-weight: 700; }
+  .wc-app-cancel {
+    display: block; width: calc(100% - 48px); margin: 8px 24px 0;
+    padding: 14px; background: none; border: none;
+    font-size: 14px; color: #999; font-weight: 600; cursor: pointer;
+    font-family: inherit;
+  }
+  .wc-app-cancel:active { color: #555; }
+
+
+  /* 푸시 알림 안내 카드 */
+  .push-notice-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #fff8e2 0%, #fff3cc 100%);
+    border: 1.5px solid #f4c95a;
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+  .push-notice-icon { font-size: 22px; flex-shrink: 0; }
+  .push-notice-body { flex: 1; }
+  .push-notice-main { font-size: 13px; font-weight: 800; color: #1a2740; line-height: 1.4; }
+  .push-notice-sub { font-size: 11.5px; font-weight: 700; color: #c98520; margin-top: 2px; }
+
+  .route-card-wrap { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+  .route-card-item { background: #fff; border: 1px solid #f0f1f4; border-radius: 14px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+  .route-card-head { display: flex; align-items: stretch; }
+  .route-bar { width: 72px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; padding: 16px 6px; }
+  .route-bar-navy { background: #1a2740; }
+  .route-bar-gold { background: #c98520; }
+  .route-bar-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,209,102,0.7); }
+  .route-card-info { flex: 1; padding: 13px 12px 12px; border-left: 1px solid #f0f1f4; }
+  .route-card-title { font-size: 13px; font-weight: 800; color: #1a2740; margin-bottom: 8px; line-height: 1.35; }
+  .route-card-steps { display: flex; flex-direction: column; gap: 5px; }
+  .rc-step { display: flex; align-items: baseline; gap: 7px; }
+  .rc-num { width: 16px; height: 16px; border-radius: 50%; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .rc-num-navy { background: #eef0f5; color: #1a2740; }
+  .rc-num-gold { background: #fdf3da; color: #7a4e00; }
+  .rc-text { font-size: 11.5px; color: #666; line-height: 1.45; }
+  .rc-text strong { color: #1a2740; font-weight: 700; }
+  .route-prize-strip { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; row-gap: 3px; padding: 7px 12px; border-top: 1px solid #f0f1f4; background: #f9f9fb; }
+  .prize-lbl { font-size: 10px; color: #999; font-weight: 600; flex-shrink: 0; }
+  .prize-v { font-size: 11px; font-weight: 500; color: #444; white-space: nowrap; }
+  .prize-v .em-navy { color: #1a2740; font-weight: 800; }
+  .prize-v .em-gold { color: #c98520; font-weight: 800; }
+  .prize-dot { width: 3px; height: 3px; border-radius: 50%; background: #d0d4dc; flex-shrink: 0; }
+
+
+  /* 당첨자 목록 발표 */
+  .winner-list-reveal {
+    margin: 20px 0;
+    background: linear-gradient(135deg, #fff9e6 0%, #fff3cc 100%);
+    border-radius: 18px;
+    border: 1.5px solid #f4c95a;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .winner-list-reveal.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .winner-list-header {
+    padding: 20px 20px 14px;
+    text-align: center;
+    background: linear-gradient(135deg, #1a2740 0%, #2a3f60 100%);
+    color: #fff;
+  }
+  .winner-list-confetti {
+    font-size: 22px;
+    margin-bottom: 6px;
+    letter-spacing: 4px;
+  }
+  .winner-list-title {
+    font-size: 18px;
+    font-weight: 900;
+    background: linear-gradient(90deg, #ffd166 0%, #ff9c3a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+  }
+  .winner-list-desc {
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 500;
+  }
+  .winner-list-table {
+    padding: 12px 16px 6px;
+  }
+  .winner-list-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    background: #fff;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    border: 1px solid #f0e9d0;
+    animation: fadeInUp 0.4s ease both;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .winner-list-num {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1a2740 0%, #2a3f60 100%);
+    color: #ffd166;
+    font-size: 11px;
+    font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .winner-list-name {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 800;
+    color: #1a2740;
+    letter-spacing: -0.2px;
+  }
+  .winner-list-badge {
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #ffd166 0%, #ff9c3a 100%);
+    color: #4a2400;
+    flex-shrink: 0;
+  }
+  .winner-list-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 12px 16px 16px;
+    font-size: 11px;
+    color: #7a5020;
+    font-weight: 500;
+    line-height: 1.5;
+    border-top: 1px solid #f0e9d0;
+    margin-top: 6px;
+  }
+  .winner-list-note span:first-child { flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -2949,10 +3363,6 @@
   <section id="page-place" class="page">
     <div class="place-page">
       <header class="building-header">
-        <div class="building-selector">
-          <span class="building-selector-name"><span class="building-num">63</span>BUILDING</span>
-          <span class="building-selector-chevron">▼</span>
-        </div>
         <div class="building-actions">
           <button class="building-action-btn" aria-label="알림" id="placeNotifBtn">
             <svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0112 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 003.4 0"/></svg>
@@ -2968,9 +3378,53 @@
 
       <div class="floor-filter-wrap">
         <div class="floor-filter" id="floorFilter"></div>
+        <button class="floor-map-btn" id="floorMapBtn" aria-label="층별 배치도">
+          <svg viewBox="0 0 24 24"><polygon points="3,7 9,4 15,7 21,4 21,17 15,20 9,17 3,20"/><line x1="9" y1="4" x2="9" y2="17"/><line x1="15" y1="7" x2="15" y2="20"/></svg>
+          <span>지도</span>
+        </button>
       </div>
 
       <div class="place-content" id="placeContent"></div>
+
+      <!-- 층별 배치도 모달 -->
+      <div class="floormap-overlay" id="floormapOverlay">
+        <div class="floormap-sheet">
+          <div class="floormap-handle"></div>
+          <div class="floormap-header">
+            <div class="floormap-title">층별 배치도</div>
+            <button class="floormap-close-btn" id="floormapCloseBtn" aria-label="닫기">✕</button>
+          </div>
+          <div class="floormap-content">
+            <div class="floormap-floor-section">
+              <span class="floormap-floor-label">GF</span>
+              <div class="floormap-zone-name">WELCOME · CULTURE · GOURMET STREET</div>
+              <div class="floormap-placeholder">
+                <span class="floormap-placeholder-icon">🗺️</span>
+                <span>GF 층 배치도 이미지</span>
+                <span class="floormap-placeholder-sub">추후 업로드 예정</span>
+              </div>
+            </div>
+            <div class="floormap-floor-section">
+              <span class="floormap-floor-label">4F</span>
+              <div class="floormap-zone-name">RIVERSIDE DINING</div>
+              <div class="floormap-placeholder">
+                <span class="floormap-placeholder-icon">🗺️</span>
+                <span>4F 층 배치도 이미지</span>
+                <span class="floormap-placeholder-sub">추후 업로드 예정</span>
+              </div>
+            </div>
+            <div class="floormap-floor-section">
+              <span class="floormap-floor-label">57-59F</span>
+              <div class="floormap-zone-name">SKYLINE DINING</div>
+              <div class="floormap-placeholder">
+                <span class="floormap-placeholder-icon">🗺️</span>
+                <span>57-59F 층 배치도 이미지</span>
+                <span class="floormap-placeholder-sub">추후 업로드 예정</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -3046,7 +3500,7 @@
       <div class="draw-content">
         <div class="draw-date-tag" id="drawDateTag">2026.08.21(금) 응모 결과</div>
         <h2 class="draw-title">오늘의 <span class="accent">VIP 티켓</span><br/>당첨자 발표</h2>
-        <p class="draw-subtitle">매일 1명, 행운의 주인공을 발표합니다</p>
+        <p class="draw-subtitle" id="drawSubtitle">오늘의 당첨자 <strong>10명</strong>을 발표합니다</p>
 
         <!-- 뽑기볼 머신 -->
         <div class="lottery-machine">
@@ -3081,12 +3535,20 @@
           </div>
         </div>
 
-        <!-- 당첨자 발표 -->
-        <div class="winner-reveal" id="winnerReveal">
-          <div class="winner-reveal-confetti">🎉 🎊 ✨</div>
-          <div class="winner-reveal-label">오늘의 당첨자</div>
-          <div class="winner-reveal-name" id="winnerRevealName">홍길동님</div>
-          <div class="winner-reveal-msg">축하합니다! 🎁<br/>VIP 티켓 2매가 발급되었습니다</div>
+        <!-- 당첨자 목록 발표 -->
+        <div class="winner-list-reveal" id="winnerListReveal">
+          <div class="winner-list-header">
+            <div class="winner-list-confetti">🎉 🎊 ✨</div>
+            <div class="winner-list-title" id="winnerListTitle">오늘의 당첨자 10명</div>
+            <div class="winner-list-desc">당첨을 진심으로 축하드립니다! 🎁</div>
+          </div>
+          <div class="winner-list-table" id="winnerListTable">
+            <!-- JS로 채워짐 -->
+          </div>
+          <div class="winner-list-note">
+            <span>📋</span>
+            <span>VIP 티켓 수령은 2026.09.05(토) 이벤트 당일 63빌딩 1F 안내데스크</span>
+          </div>
         </div>
 
         <!-- 푸시 알림 안내 -->
@@ -3114,7 +3576,7 @@
           <div class="result-win-icon">🎁</div>
           <div class="result-win-label">CONGRATULATIONS</div>
           <div class="result-win-title">당첨을 축하합니다!</div>
-          <div class="result-win-name"><strong>홍길동님</strong></div>
+          <div class="result-win-name"><strong>배관용님</strong></div>
 
           <div class="ticket-info-card">
             <div class="ticket-info-title">🎟️ 티켓 수령 안내</div>
@@ -3158,6 +3620,7 @@
           <div class="result-chances-card">
             <div class="result-chances-label">오늘 응모 가능 횟수</div>
             <div class="result-chances-value"><span id="resultTodayChances">1</span><span class="unit">회</span></div>
+            <div class="result-chances-sub">+ 공유 시 추가 응모 기회 제공!</div>
           </div>
 
           <button class="result-retry-btn" id="resultRetryBtn" type="button">
@@ -3174,69 +3637,208 @@
     </div>
   </section>
 
-  <!-- 공유받은 사용자 - 웹뷰 미리보기 -->
+  <!-- 공유받은 사용자 - 웹뷰 미리보기 (이벤트 상세 동일 구성) -->
   <section id="page-webview-preview" class="page">
-    <div class="webview-page">
+    <div class="webview-clone-page">
+
+      <!-- 브라우저 바 -->
       <header class="webview-browser-bar">
         <button class="browser-action" data-nav="event-detail" aria-label="닫기">✕</button>
         <div class="url-box">63place.app/event/firework-vip-2026</div>
         <button class="browser-action" aria-label="더보기">⋮</button>
       </header>
-      <div class="webview-content">
-        <div class="webview-hero">
-          <div class="webview-brand">
-            <div class="webview-brand-circle">63</div>
-            <div class="webview-brand-text">골든 멤버십 · GOLDEN MEMBERSHIP</div>
-          </div>
-          <div class="webview-title">2026 서울세계 불꽃축제<br/><span class="accent">VIP 티켓</span> 응모 이벤트</div>
-          <div class="webview-subtitle">친구가 이벤트를 공유했어요!<br/>창문 닦기 미션에 참여하고 VIP 티켓을 받아보세요.</div>
+
+      <!-- 이벤트 상세와 동일한 스크롤 본문 -->
+      <div class="wc-scroll-body" id="wcScrollBody">
+
+        <!-- 히어로 (공유받은 사람용 배너 문구) -->
+        <div class="event-hero wc-hero-shared">
+          <span class="event-tag">골든 멤버십 런칭 이벤트</span>
+          <h2 class="event-title">2026 서울세계 불꽃축제<br/>VIP 티켓 응모 이벤트</h2>
+          <p class="event-desc">
+            친구가 이벤트를 공유했어요! 🎆<br/>
+            창문 뒤에 숨겨진 VIP 티켓의 주인공이<br/>
+            바로 당신일 수도 있어요!
+          </p>
         </div>
 
-        <div class="webview-body">
-          <div class="webview-section">
-            <div class="webview-section-title">🎁 이벤트 안내</div>
-            <div class="webview-info-card">
-              <div class="webview-info-row"><strong>참여 기간</strong><span>2026.08.21(금) ~ 08.27(목)</span></div>
-              <div class="webview-info-row"><strong>당첨 인원</strong><span>① 즉석당첨 63명 (1인당 2매)<br/>② 이벤트 공유왕 3명 (1인당 2매)</span></div>
-              <div class="webview-info-row"><strong>티켓 수령</strong><span>2026.09.05(토) 이벤트 당일 현장 수령</span></div>
-            </div>
-          </div>
-
-          <div class="webview-section">
-            <div class="webview-section-title">🏆 이벤트 공유왕 선정 기준</div>
-            <div class="webview-info-card">
-              <div class="webview-info-row" style="display:block">
-                공유 링크 클릭이 가장 많이 발생한 회원 상위 <strong style="color:#ff5722;min-width:0;display:inline">3명</strong>을 선정합니다.
-                <div style="margin-top:8px;font-size:12px;color:#666;line-height:1.55">
-                  · 받은 사람이 링크를 더 많이 누를수록 당첨 확률이 올라가요.<br/>
-                  · 발표일: 2026.08.31(월)
+        <!-- 이벤트 개요 -->
+        <div class="event-info-box" style="margin:0 16px 16px;">
+          <h3>이벤트 개요</h3>
+          <div class="info-row"><span class="label">참여 기간</span><span class="value">2026.08.21(금) ~ 08.27(목)</span></div>
+          <div class="info-row">
+            <span class="label">참여 방법 및 당첨자 발표</span>
+            <span class="value">
+              <div class="route-card-wrap">
+                <div class="route-card-item">
+                  <div class="route-card-head">
+                    <div class="route-bar route-bar-navy">
+                      <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+                        <rect x="5" y="5" width="28" height="28" rx="2.5" stroke="#ffd166" stroke-width="1.8" fill="none"/>
+                        <line x1="19" y1="5" x2="19" y2="33" stroke="#ffd166" stroke-width="1.4" stroke-linecap="round"/>
+                        <line x1="5" y1="19" x2="33" y2="19" stroke="#ffd166" stroke-width="1.4" stroke-linecap="round"/>
+                        <rect x="6.5" y="6.5" width="11" height="11" rx="1" fill="rgba(255,209,102,0.22)"/>
+                        <path d="M9 25 Q10 22 11 25" stroke="rgba(255,209,102,0.5)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                        <path d="M13 27 Q14 24.5 15 27" stroke="rgba(255,209,102,0.4)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                        <rect x="28" y="25" width="12" height="4.5" rx="2" fill="#ffd166" transform="rotate(-40 28 25)"/>
+                        <line x1="35" y1="31" x2="39" y2="37" stroke="#ffd166" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                      <span class="route-bar-label">Daily</span>
+                    </div>
+                    <div class="route-card-info">
+                      <div class="route-card-title">매일 창문 닦기 + 공유 응모</div>
+                      <div class="route-card-steps">
+                        <div class="rc-step"><span class="rc-num rc-num-navy">1</span><span class="rc-text">하루 1회 창문 닦기 → <strong>응모권 1장</strong></span></div>
+                        <div class="rc-step"><span class="rc-num rc-num-navy">2</span><span class="rc-text">공유할 때마다 응모권 +1장 <strong>(최대 5장 추가)</strong></span></div>
+                        <div class="rc-step"><span class="rc-num rc-num-navy">3</span><span class="rc-text">다음날 오전 11시 당첨자 발표</span></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="route-prize-strip">
+                    <span class="prize-lbl">당첨 규모</span>
+                    <span class="prize-v">총 <strong class="em-navy">63명</strong></span>
+                    <span class="prize-dot"></span>
+                    <span class="prize-v">1~5일 <strong class="em-navy">10명</strong>, 6일 <strong class="em-navy">13명</strong></span>
+                    <span class="prize-dot"></span>
+                    <span class="prize-v">1인 2매</span>
+                  </div>
                 </div>
+                <div class="route-card-item">
+                  <div class="route-card-head">
+                    <div class="route-bar route-bar-gold">
+                      <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+                        <path d="M8 30 L8 26 L14 20 L22 28 L30 16 L36 26 L36 30 Z" fill="rgba(255,248,224,0.18)" stroke="#fff8e0" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+                        <rect x="7" y="29" width="30" height="4.5" rx="1.5" fill="rgba(255,248,224,0.22)" stroke="#fff8e0" stroke-width="1.4"/>
+                        <circle cx="8" cy="26" r="1.8" fill="#fff8e0"/>
+                        <circle cx="22" cy="28" r="1.8" fill="#fff8e0"/>
+                        <circle cx="36" cy="26" r="1.8" fill="#fff8e0"/>
+                        <circle cx="30" cy="16" r="2.2" fill="#fff8e0"/>
+                        <circle cx="34" cy="10" r="2.5" stroke="rgba(255,248,224,0.55)" stroke-width="1.3" fill="none"/>
+                        <circle cx="40" cy="6" r="2.5" stroke="rgba(255,248,224,0.55)" stroke-width="1.3" fill="none"/>
+                        <circle cx="40" cy="14" r="2.5" stroke="rgba(255,248,224,0.55)" stroke-width="1.3" fill="none"/>
+                        <line x1="36.3" y1="11.2" x2="37.8" y2="12.8" stroke="rgba(255,248,224,0.55)" stroke-width="1.2" stroke-linecap="round"/>
+                        <line x1="36.3" y1="8.8" x2="37.8" y2="7.2" stroke="rgba(255,248,224,0.55)" stroke-width="1.2" stroke-linecap="round"/>
+                      </svg>
+                      <span class="route-bar-label" style="color:rgba(255,248,224,0.7)">King</span>
+                    </div>
+                    <div class="route-card-info">
+                      <div class="route-card-title">공유왕 선정 — 기간 내 최다 공유</div>
+                      <div class="route-card-steps">
+                        <div class="rc-step"><span class="rc-num rc-num-gold">1</span><span class="rc-text">이벤트 기간 동안 내 링크를 최대한 공유</span></div>
+                        <div class="rc-step"><span class="rc-num rc-num-gold">2</span><span class="rc-text"><strong>실클릭수</strong> 기준 상위 3명 선정</span></div>
+                        <div class="rc-step"><span class="rc-num rc-num-gold">3</span><span class="rc-text">8월 31일 별도 당첨자 발표</span></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="route-prize-strip">
+                    <span class="prize-lbl">당첨 규모</span>
+                    <span class="prize-v">상위 <strong class="em-gold">3명</strong></span>
+                    <span class="prize-dot"></span>
+                    <span class="prize-v">1인 2매</span>
+                    <span class="prize-dot"></span>
+                    <span class="prize-v">추첨 당첨자와 중복 불가</span>
+                  </div>
+                </div>
+              </div>
+            </span>
+          </div>
+          <div class="info-row push-notice-row">
+            <span class="label">당첨 결과 안내</span>
+            <span class="value">
+              <div class="push-notice-card">
+                <div class="push-notice-icon">🔔</div>
+                <div class="push-notice-body">
+                  <div class="push-notice-main">당첨 결과는 앱 푸시로 알려드려요!</div>
+                  <div class="push-notice-sub">반드시 알림 수신에 동의해주세요!</div>
+                </div>
+              </div>
+            </span>
+          </div>
+          <div class="info-row"><span class="label">티켓수령</span><span class="value">2026.09.05(토) 이벤트 당일 현장 티켓 수령</span></div>
+        </div>
+
+        <!-- 창문 닦기 영역 (인터랙션 시 팝업) -->
+        <div class="scratch-section" style="margin:0 16px;">
+          <div class="scratch-spotlight">
+            <div class="spotlight-content">
+              <h2 class="spotlight-title">창문 닦기 챌린지</h2>
+              <p class="spotlight-desc">손가락으로 9장의 창문을 깨끗이 닦아주세요!</p>
+              <!-- 클릭/터치 인터셉트 레이어 -->
+              <div class="wc-scratch-intercept" id="wcScratchIntercept">
+                <div class="scratch-back"></div>
+                <div class="wc-intercept-hint">
+                  <span>👆</span>
+                  <span>화면을 눌러 시작하기</span>
+                </div>
+                <svg class="window-grid" viewBox="0 0 300 225" preserveAspectRatio="none">
+                  <line x1="100" y1="0" x2="100" y2="225" stroke="rgba(45,30,10,0.25)" stroke-width="1.4"/>
+                  <line x1="200" y1="0" x2="200" y2="225" stroke="rgba(45,30,10,0.25)" stroke-width="1.4"/>
+                  <line x1="0" y1="75"  x2="300" y2="75"  stroke="rgba(45,30,10,0.25)" stroke-width="1.4"/>
+                  <line x1="0" y1="150" x2="300" y2="150" stroke="rgba(45,30,10,0.25)" stroke-width="1.4"/>
+                </svg>
               </div>
             </div>
           </div>
 
-          <div class="webview-section">
-            <div class="webview-section-title">✨ 이벤트 참여 방법</div>
-            <div class="webview-info-card">
-              <div class="webview-info-row" style="display:block;line-height:1.7">
-                <strong style="display:block;margin-bottom:6px;color:#1a2740">참여하려면 골든 멤버십 앱이 필요해요</strong>
-                <div style="font-size:12.5px;color:#555">
-                  · 앱 다운로드 후 회원 가입 (소셜 로그인 지원)<br/>
-                  · 이벤트 페이지에서 창문 닦기 미션 참여<br/>
-                  · 친구에게 공유하면 추가 응모 기회 획득
-                </div>
-              </div>
-            </div>
+          <div class="progress-wrap">
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <div class="progress-text"><span>0</span>% 완료</div>
+          </div>
+
+          <!-- 공유 부스트 카드 (클릭 → 팝업) -->
+          <div class="share-boost wc-share-boost-intercept" id="wcShareBoost">
+            <div class="boost-icon">🎁</div>
+            <div class="boost-sub">공유 <strong>1회마다 응모권 1장이 추가</strong>되어 당첨 확률이 높아져요!<br/><span class="sub-aux">(하루 최대 5회까지 가능)</span></div>
+            <button class="os-share-btn" type="button">
+              <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              친구에게 공유하기
+            </button>
           </div>
         </div>
+
+        <div style="height:100px;"></div>
       </div>
 
+      <!-- 하단 고정 CTA -->
       <div class="webview-fixed-cta">
-        <button class="webview-cta-btn" id="webviewEnterBtn">
+        <button class="webview-cta-btn" id="wcMainCtaBtn">
           <span>📱</span>
           앱 다운로드하고 응모하기
         </button>
       </div>
+
+      <!-- 앱 다운로드 팝업 (모든 액션 시 표시) -->
+      <div class="wc-app-overlay" id="wcAppOverlay">
+        <div class="wc-app-sheet">
+          <div class="wc-app-handle"></div>
+          <div class="wc-app-body">
+            <div class="wc-app-icon">63</div>
+            <div class="wc-app-title">앱에서 이벤트에 참여하세요!</div>
+            <div class="wc-app-desc">
+              골든 멤버십 앱을 다운로드하고<br/>
+              회원가입 후 VIP 티켓 응모에 참여할 수 있어요.
+            </div>
+            <div class="wc-app-btns">
+              <button class="wc-store-btn wc-ios" id="wcIosBtn">
+                <span class="wc-store-icon"></span>
+                <div class="wc-store-text">
+                  <span class="wc-store-sub">Download on the</span>
+                  <span class="wc-store-name">App Store</span>
+                </div>
+              </button>
+              <button class="wc-store-btn wc-android" id="wcAndroidBtn">
+                <span class="wc-store-icon">▶</span>
+                <div class="wc-store-text">
+                  <span class="wc-store-sub">Get it on</span>
+                  <span class="wc-store-name">Google Play</span>
+                </div>
+              </button>
+            </div>
+          </div>
+          <button class="wc-app-cancel" id="wcAppCancelBtn">나중에 하기</button>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -3305,53 +3907,96 @@
           <h3>이벤트 개요</h3>
           <div class="info-row"><span class="label">참여 기간</span><span class="value">2026.08.21(금) ~ 08.27(목)</span></div>
           <div class="info-row">
-            <span class="label">참여 방법</span>
+            <span class="label">참여 방법 및 당첨자 발표</span>
             <span class="value">
-              <div class="method-list">
-                <div class="method-step">
-                  <div class="method-num">1</div>
-                  <div class="method-body">
-                    <div class="method-title">매일 1번, 63빌딩의 창문을 닦고 응모하세요!</div>
-                    <ul class="method-points">
-                      <li>1일 1회 창문 닦기 = <strong>응모권 1장</strong></li>
-                      <li>응모는 매일 00:00 ~ 23:59까지 받아요</li>
-                    </ul>
+              <div class="route-card-wrap">
+
+                <!-- 루트 A: 창문 닦기 -->
+                <div class="route-card-item">
+                  <div class="route-card-head">
+                    <div class="route-bar route-bar-navy">
+                      <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="5" y="5" width="28" height="28" rx="2.5" stroke="#ffd166" stroke-width="1.8" fill="none"/>
+                        <line x1="19" y1="5" x2="19" y2="33" stroke="#ffd166" stroke-width="1.4" stroke-linecap="round"/>
+                        <line x1="5" y1="19" x2="33" y2="19" stroke="#ffd166" stroke-width="1.4" stroke-linecap="round"/>
+                        <rect x="6.5" y="6.5" width="11" height="11" rx="1" fill="rgba(255,209,102,0.22)"/>
+                        <path d="M9 25 Q10 22 11 25" stroke="rgba(255,209,102,0.5)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                        <path d="M13 27 Q14 24.5 15 27" stroke="rgba(255,209,102,0.4)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                        <rect x="28" y="25" width="12" height="4.5" rx="2" fill="#ffd166" transform="rotate(-40 28 25)"/>
+                        <line x1="35" y1="31" x2="39" y2="37" stroke="#ffd166" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                      <span class="route-bar-label">Daily</span>
+                    </div>
+                    <div class="route-card-info">
+                      <div class="route-card-title">매일 창문 닦기 + 공유 응모</div>
+                      <div class="route-card-steps">
+                        <div class="rc-step"><span class="rc-num rc-num-navy">1</span><span class="rc-text">하루 1회 창문 닦기 → <strong>응모권 1장</strong></span></div>
+                        <div class="rc-step"><span class="rc-num rc-num-navy">2</span><span class="rc-text">공유할 때마다 응모권 +1장 <strong>(최대 5장 추가)</strong></span></div>
+                        <div class="rc-step"><span class="rc-num rc-num-navy">3</span><span class="rc-text">다음날 오전 11시 당첨자 발표</span></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="route-prize-strip">
+                    <span class="prize-lbl">당첨 규모</span>
+                    <span class="prize-v">총 <strong class="em-navy">63명</strong></span>
+                    <span class="prize-dot"></span>
+                    <span class="prize-v">1~5일 <strong class="em-navy">10명</strong>, 6일 <strong class="em-navy">13명</strong></span>
+                    <span class="prize-dot"></span>
+                    <span class="prize-v">1인 2매</span>
                   </div>
                 </div>
-                <div class="method-step">
-                  <div class="method-num">2</div>
-                  <div class="method-body">
-                    <div class="method-title">친구에게 공유하고 <strong>당첨 확률</strong>을 더 높이세요!</div>
-                    <ul class="method-points">
-                      <li>공유 1회마다 응모권 +1장 (하루 최대 5장 추가)</li>
-                      <li>응모권이 많을수록 당첨 확률이 올라가요</li>
-                    </ul>
+
+                <!-- 루트 B: 공유왕 -->
+                <div class="route-card-item">
+                  <div class="route-card-head">
+                    <div class="route-bar route-bar-gold">
+                      <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 30 L8 26 L14 20 L22 28 L30 16 L36 26 L36 30 Z" fill="rgba(255,248,224,0.18)" stroke="#fff8e0" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+                        <rect x="7" y="29" width="30" height="4.5" rx="1.5" fill="rgba(255,248,224,0.22)" stroke="#fff8e0" stroke-width="1.4"/>
+                        <circle cx="8" cy="26" r="1.8" fill="#fff8e0"/>
+                        <circle cx="22" cy="28" r="1.8" fill="#fff8e0"/>
+                        <circle cx="36" cy="26" r="1.8" fill="#fff8e0"/>
+                        <circle cx="30" cy="16" r="2.2" fill="#fff8e0"/>
+                        <circle cx="34" cy="10" r="2.5" stroke="rgba(255,248,224,0.55)" stroke-width="1.3" fill="none"/>
+                        <circle cx="40" cy="6" r="2.5" stroke="rgba(255,248,224,0.55)" stroke-width="1.3" fill="none"/>
+                        <circle cx="40" cy="14" r="2.5" stroke="rgba(255,248,224,0.55)" stroke-width="1.3" fill="none"/>
+                        <line x1="36.3" y1="11.2" x2="37.8" y2="12.8" stroke="rgba(255,248,224,0.55)" stroke-width="1.2" stroke-linecap="round"/>
+                        <line x1="36.3" y1="8.8" x2="37.8" y2="7.2" stroke="rgba(255,248,224,0.55)" stroke-width="1.2" stroke-linecap="round"/>
+                      </svg>
+                      <span class="route-bar-label" style="color:rgba(255,248,224,0.7)">King</span>
+                    </div>
+                    <div class="route-card-info">
+                      <div class="route-card-title">공유왕 선정 — 기간 내 최다 공유</div>
+                      <div class="route-card-steps">
+                        <div class="rc-step"><span class="rc-num rc-num-gold">1</span><span class="rc-text">이벤트 기간 동안 내 링크를 최대한 공유</span></div>
+                        <div class="rc-step"><span class="rc-num rc-num-gold">2</span><span class="rc-text"><strong>실클릭수</strong> 기준 상위 3명 선정</span></div>
+                        <div class="rc-step"><span class="rc-num rc-num-gold">3</span><span class="rc-text">8월 31일 별도 당첨자 발표</span></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="route-prize-strip">
+                    <span class="prize-lbl">당첨 규모</span>
+                    <span class="prize-v">상위 <strong class="em-gold">3명</strong></span>
+                    <span class="prize-dot"></span>
+                    <span class="prize-v">1인 2매</span>
+                    <span class="prize-dot"></span>
+                    <span class="prize-v">추첨 당첨자와 중복 불가</span>
                   </div>
                 </div>
-                <div class="method-step">
-                  <div class="method-num">3</div>
-                  <div class="method-body">
-                    <div class="method-title">다음날 오전 <strong>11시</strong>, 매일 당첨자가 발표돼요!</div>
-                    <ul class="method-points">
-                      <li>매일 1명 추첨, 7일간 총 7명 당첨</li>
-                      <li>모든 응모자에게 결과를 앱 푸시로 안내해드려요</li>
-                    </ul>
-                  </div>
-                </div>
+
               </div>
             </span>
           </div>
-          <div class="info-row">
-            <span class="label">당첨 인원 및 당첨자 발표</span>
+          <div class="info-row push-notice-row">
+            <span class="label">당첨 결과 안내</span>
             <span class="value">
-              <span class="winners-item">
-                <strong>매일 1명 추첨, 7일간 총 7명</strong><span class="winners-unit">1인당 2매</span>
-                <span class="winners-detail">매일 00:00~23:59 응모자 중 무작위 추첨 후, 다음날 오전 11시 당첨자 발표</span>
-              </span>
-              <span class="winners-item">
-                <strong>📱 모든 응모자에게 푸시 알림</strong>
-                <span class="winners-detail">당첨자 발표 시각에 결과를 앱 푸시로 안내드려요</span>
-              </span>
+              <div class="push-notice-card">
+                <div class="push-notice-icon">🔔</div>
+                <div class="push-notice-body">
+                  <div class="push-notice-main">당첨 결과는 앱 푸시로 알려드려요!</div>
+                  <div class="push-notice-sub">반드시 알림 수신에 동의해주세요!</div>
+                </div>
+              </div>
             </span>
           </div>
           <div class="info-row"><span class="label">티켓수령</span><span class="value">2026.09.05(토) 이벤트 당일 현장 티켓 수령</span></div>
@@ -4049,7 +4694,7 @@
 
   // ============ 층 정렬 (낮은 층 우선: GF → 4F → 57-59F) ============
   function floorSortKey(floor) {
-    if (!floor) return 999;
+    if (typeof floor !== 'string' || !floor) return 999;
     if (floor === 'GF') return 0;
     const m = floor.match(/(\d+)/);
     return m ? parseInt(m[1], 10) : 999;
@@ -4113,7 +4758,7 @@
       ? STORES.slice()
       : STORES.filter(s => s.floor === currentFloorFilter);
     // 낮은 층 우선 정렬
-    filtered.sort((a, b) => floorSortKey(a) - floorSortKey(b));
+    filtered.sort((a, b) => floorSortKey(a.floor) - floorSortKey(b.floor));
 
     const c = document.getElementById('placeContent');
     if (!c) return;
@@ -4581,6 +5226,16 @@
   const demoResetBtn = document.getElementById('demoResetBtn');
   if (demoResetBtn) demoResetBtn.addEventListener('click', demoFullReset);
 
+  // 플레이스 탭 - 층별 배치도 모달
+  const floormapOverlay = document.getElementById('floormapOverlay');
+  const floorMapBtn = document.getElementById('floorMapBtn');
+  const floormapCloseBtn = document.getElementById('floormapCloseBtn');
+  if (floorMapBtn && floormapOverlay) floorMapBtn.addEventListener('click', () => floormapOverlay.classList.add('show'));
+  if (floormapCloseBtn) floormapCloseBtn.addEventListener('click', () => floormapOverlay.classList.remove('show'));
+  if (floormapOverlay) floormapOverlay.addEventListener('click', e => {
+    if (e.target === floormapOverlay) floormapOverlay.classList.remove('show');
+  });
+
   // ============ [데모] 당첨자 발표 미리보기 ============
   function getYesterdayStr() {
     const d = new Date();
@@ -4590,9 +5245,9 @@
   }
 
   function startDrawAnimation() {
-    // 통계 데이터 셋업 - 사용자의 실제 응모 횟수 활용 (최소 1)
+    // 통계 데이터 셋업
     const myEntries = Math.max(totalDailyEntries(), 1);
-    const totalEntries = 1247; // 데모용 가상 전체 응모자 수
+    const totalEntries = 1247;
     const probability = ((myEntries / totalEntries) * 100).toFixed(2);
 
     // 날짜 라벨
@@ -4607,26 +5262,61 @@
     if (probEl) probEl.textContent = `${probability}%`;
 
     const orbArea = document.getElementById('lotteryOrbArea');
-    const reveal = document.getElementById('winnerReveal');
+    const listReveal = document.getElementById('winnerListReveal');
+    const listTable = document.getElementById('winnerListTable');
+    const listTitle = document.getElementById('winnerListTitle');
+    const drawSubtitle = document.getElementById('drawSubtitle');
     const machineLabel = document.querySelector('.lottery-machine-label');
 
-    // 초기 상태 (선택 전)
+    // 데모: 오늘 날짜로 1~6일차 중 몇 일차인지 결정 (데모용 고정값)
+    const todayIdx = new Date().getDate() % 6; // 0~5
+    const isLastDay = todayIdx === 5;
+    const winnerCount = isLastDay ? 13 : 10;
+
+    if (drawSubtitle) drawSubtitle.innerHTML = `오늘의 당첨자 <strong>${winnerCount}명</strong>을 발표합니다`;
+    if (listTitle) listTitle.textContent = `오늘의 당첨자 ${winnerCount}명`;
+
+    // 초기 상태
     if (orbArea) orbArea.classList.remove('selected');
-    if (reveal) reveal.classList.remove('show');
+    if (listReveal) listReveal.classList.remove('show');
     if (machineLabel) machineLabel.innerHTML = '<span class="pulse-dot"></span>DRAWING IN PROGRESS';
 
-    // 5.0초 후 뽑기 시작 (한 볼이 솟아오름)
+    // 5.0초 후 뽑기 완료
     setTimeout(() => {
       if (orbArea) orbArea.classList.add('selected');
       if (machineLabel) machineLabel.innerHTML = '✨ WINNER SELECTED';
     }, 5000);
 
-    // 6.0초 후 당첨자 이름 발표
+    // 6.0초 후 당첨자 목록 표시
     setTimeout(() => {
-      if (reveal) reveal.classList.add('show');
+      // 데모용 당첨자 이름 목록 생성 (가운데 글자 마스킹)
+      const demoNames = [
+        '김민준', '이서연', '박지훈', '최수아', '정우진',
+        '강예린', '조민서', '윤하은', '임도현', '한지우',
+        '오지민', '신예준', '류수빈'
+      ];
+      function maskName(name) {
+        if (name.length === 2) return name[0] + '◦';
+        if (name.length === 3) return name[0] + '◦' + name[2];
+        if (name.length >= 4) {
+          const mid = name.slice(1, name.length - 1).replace(/./g, '◦');
+          return name[0] + mid + name[name.length - 1];
+        }
+        return name;
+      }
+      if (listTable) {
+        listTable.innerHTML = demoNames.slice(0, winnerCount).map((name, i) => `
+          <div class="winner-list-item" style="animation-delay:${i * 0.07}s">
+            <div class="winner-list-num">${i + 1}</div>
+            <div class="winner-list-name">${maskName(name)}님</div>
+            <div class="winner-list-badge">VIP 티켓 2매</div>
+          </div>
+        `).join('');
+      }
+      if (listReveal) listReveal.classList.add('show');
     }, 6000);
 
-    // 11.0초 후 결과 페이지로 자동 전환 (당첨자 모드)
+    // 11.0초 후 결과 페이지로 자동 전환
     setTimeout(() => {
       showDrawResult('win');
     }, 11000);
@@ -4645,6 +5335,20 @@
     if (!page) return;
     page.classList.remove('win-mode', 'lose-mode');
     page.classList.add(mode + '-mode');
+
+    // 데모: 모드에 따라 당첨 상태 + 응모 기회 동기화 (지갑 탭/공유 카드에 반영)
+    if (mode === 'win') {
+      hasWon = true;
+      safeSave(KEY_HAS_WON, true);
+      chancesLeft = 0;
+      safeSave(KEY_DAILY_CHANCES, 0);
+    } else {
+      hasWon = false;
+      safeSave(KEY_HAS_WON, false);
+    }
+    updateWinStatusUI();
+    updateChanceUI();
+    updateShareBoostUI();
 
     // 낙첨자 모드면 오늘 응모 가능 횟수 표시 (기본 응모권 + 남은 보너스 응모권)
     if (mode === 'lose') {
@@ -4672,20 +5376,45 @@
 
   // 공유받은 사용자 화면 미리보기 진입
   const sharePreviewBtn = document.getElementById('sharePreviewBtn');
-  if (sharePreviewBtn) sharePreviewBtn.addEventListener('click', () => navigate('webview-preview'));
-
-  // 웹뷰 페이지의 응모하기 버튼 → 앱스토어 모달
-  const appstoreOverlay = document.getElementById('appstoreOverlay');
-  const webviewEnterBtn = document.getElementById('webviewEnterBtn');
-  if (webviewEnterBtn) webviewEnterBtn.addEventListener('click', () => {
-    if (appstoreOverlay) appstoreOverlay.classList.add('show');
+  if (sharePreviewBtn) sharePreviewBtn.addEventListener('click', () => {
+    navigate('webview-preview');
+    // 스크롤 상단으로
+    const sb = document.getElementById('wcScrollBody');
+    if (sb) sb.scrollTop = 0;
   });
 
-  // 앱스토어 모달 닫기/이동 핸들러
+  // ── 웹뷰 클론 페이지: 앱 다운로드 팝업 ──
+  const wcAppOverlay = document.getElementById('wcAppOverlay');
+  function showWcAppPopup() { if (wcAppOverlay) wcAppOverlay.classList.add('show'); }
+  function hideWcAppPopup() { if (wcAppOverlay) wcAppOverlay.classList.remove('show'); }
+
+  // 하단 CTA 버튼
+  const wcMainCtaBtn = document.getElementById('wcMainCtaBtn');
+  if (wcMainCtaBtn) wcMainCtaBtn.addEventListener('click', showWcAppPopup);
+
+  // 창문 닦기 영역 클릭
+  const wcScratchIntercept = document.getElementById('wcScratchIntercept');
+  if (wcScratchIntercept) wcScratchIntercept.addEventListener('click', showWcAppPopup);
+
+  // 공유 부스트 카드 클릭
+  const wcShareBoost = document.getElementById('wcShareBoost');
+  if (wcShareBoost) wcShareBoost.addEventListener('click', showWcAppPopup);
+
+  // 팝업 내 버튼 핸들러
+  const wcIosBtn = document.getElementById('wcIosBtn');
+  const wcAndroidBtn = document.getElementById('wcAndroidBtn');
+  const wcAppCancelBtn = document.getElementById('wcAppCancelBtn');
+  if (wcIosBtn) wcIosBtn.addEventListener('click', () => { hideWcAppPopup(); showToast('🍎 App Store로 이동합니다'); });
+  if (wcAndroidBtn) wcAndroidBtn.addEventListener('click', () => { hideWcAppPopup(); showToast('▶ Google Play로 이동합니다'); });
+  if (wcAppCancelBtn) wcAppCancelBtn.addEventListener('click', hideWcAppPopup);
+  if (wcAppOverlay) wcAppOverlay.addEventListener('click', e => { if (e.target === wcAppOverlay) hideWcAppPopup(); });
+
+  // 웹뷰 페이지의 응모하기 버튼 → 앱스토어 모달 (구 버전 호환)
+  const appstoreOverlay = document.getElementById('appstoreOverlay');
+  function closeAppstoreModal() { if (appstoreOverlay) appstoreOverlay.classList.remove('show'); }
   const appstoreCancelBtn = document.getElementById('appstoreCancelBtn');
   const appstoreIosBtn = document.getElementById('appstoreIosBtn');
   const appstoreAndroidBtn = document.getElementById('appstoreAndroidBtn');
-  function closeAppstoreModal() { if (appstoreOverlay) appstoreOverlay.classList.remove('show'); }
   if (appstoreCancelBtn) appstoreCancelBtn.addEventListener('click', closeAppstoreModal);
   if (appstoreOverlay) appstoreOverlay.addEventListener('click', e => { if (e.target === appstoreOverlay) closeAppstoreModal(); });
   if (appstoreIosBtn) appstoreIosBtn.addEventListener('click', () => { closeAppstoreModal(); showToast('🍎 App Store로 이동합니다'); });
